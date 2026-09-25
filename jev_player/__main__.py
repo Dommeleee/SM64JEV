@@ -45,6 +45,7 @@ def cmd_setup(args):
     if target.exists():
         shutil.rmtree(target)
     shutil.copytree(REPO_DIR / "mod" / MOD_NAME, target)
+    (user_dir / "sav").mkdir(exist_ok=True)
     print(f"Mod installiert: {target}")
 
     if load_api_key():
@@ -64,11 +65,19 @@ def cmd_play(args):
     hold_until = -1
     start_coins = None
     last_print = 0.0
+    waiting_since = time.monotonic()
+    hinted = False
     print(f"Spiele mit '{brain.name}'. Warte auf das Spiel ({bridge.state_path}) ... Beenden mit Ctrl+C.")
     try:
         while True:
             state = bridge.read_state()
             if state is None:
+                if start_coins is None and not hinted and time.monotonic() - waiting_since > 15:
+                    hinted = True
+                    print("Noch keine Daten vom Spiel. Bitte prüfen:")
+                    print("  - Läuft SM64CoopDX, mit 'Jev Mario' unter Mods angehakt?")
+                    print("  - Bist du im Spiel (nicht im Menü) und steht oben links 'Jev: ...'?")
+                    print("  - Falls dort 'Jev: Fehler beim Speichern' steht: Spiel neu starten.")
                 time.sleep(0.03)
                 continue
             if start_coins is None:

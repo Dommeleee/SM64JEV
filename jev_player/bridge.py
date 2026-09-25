@@ -39,6 +39,8 @@ class GameBridge:
         self.state_path = self.sav_dir / f"{MOD_NAME}.modfs"
         self.cmd_path = self.sav_dir / f"{CMD_MODFS}.modfs"
         self._last_t = None
+        # SM64CoopDX does not create sav/ on its own; without it the mod cannot write its state
+        self.sav_dir.mkdir(parents=True, exist_ok=True)
 
     def read_state(self) -> dict | None:
         """Newest state from the game, or None if nothing new (or mid-write)."""

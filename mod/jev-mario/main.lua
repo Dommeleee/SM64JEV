@@ -19,6 +19,7 @@ local PROBE_DISTS = { 150, 350 }
 local enabled = true
 local frame = 0
 local myFs = nil
+local saveFailed = false
 
 -- current command
 local cmd = { id = -1, act = "stop", tx = 0, tz = 0, frames = 0 }
@@ -126,7 +127,7 @@ local function write_state(m)
     mod_fs_file_rewind(file)
     mod_fs_file_erase(file, file.size)
     mod_fs_file_write_string(file, json)
-    mod_fs_save(myFs)
+    saveFailed = not mod_fs_save(myFs)
 end
 
 -- command line format: "id=12 act=walk tx=100 tz=-250 frames=30"
@@ -238,6 +239,7 @@ local function on_hud_render()
     djui_hud_set_font(FONT_NORMAL)
     local label = "Jev: " .. cmd.act
     if lastCmdId < 0 or cmdFrame >= cmd.frames then label = "Jev: wartet auf Python" end
+    if saveFailed then label = "Jev: Fehler beim Speichern" end
     djui_hud_print_text(label, 20, 20, 1, 1)
 end
 
