@@ -50,7 +50,7 @@ class BridgeTest(unittest.TestCase):
         self.assertTrue(props["files"]["cmd.txt"]["isPublic"])
 
     def test_reads_state_once_and_ignores_broken_file(self):
-        self.bridge.sav_dir.mkdir(parents=True)
+        self.assertTrue(self.bridge.sav_dir.is_dir())  # created by GameBridge
         self.bridge.state_path.write_bytes(b"half written")
         self.assertIsNone(self.bridge.read_state())
         buf = io.BytesIO()
