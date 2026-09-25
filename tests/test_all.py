@@ -203,5 +203,24 @@ class LuaModTest(unittest.TestCase):
         self.assertIn("intendedYaw=16384", out)
 
 
+
+class FindGameTest(unittest.TestCase):
+    def test_uses_info_plist_not_a_library(self):
+        import plistlib
+        from jev_player.__main__ import app_executable
+        app = Path(tempfile.mkdtemp()) / "sm64coopdx.app"
+        self.addCleanup(shutil.rmtree, app.parent)
+        macos = app / "Contents" / "MacOS"
+        macos.mkdir(parents=True)
+        for name in ("libjuice.1.6.2.dylib", "sm64coopdx"):
+            (macos / name).write_text("x")
+            (macos / name).chmod(0o755)
+        with open(app / "Contents" / "Info.plist", "wb") as f:
+            plistlib.dump({"CFBundleExecutable": "sm64coopdx"}, f)
+        self.assertEqual(app_executable(app).name, "sm64coopdx")
+        (app / "Contents" / "Info.plist").unlink()
+        self.assertEqual(app_executable(app).name, "sm64coopdx")  # fallback skips the .dylib
+
+
 if __name__ == "__main__":
     unittest.main()

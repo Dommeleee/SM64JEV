@@ -11,6 +11,8 @@ from __future__ import annotations
 import argparse
 import getpass
 import glob
+import os
+import plistlib
 import shutil
 import subprocess
 import sys
@@ -71,13 +73,30 @@ def find_game() -> Path | None:
     ]
     for pattern in patterns:
         for app in sorted(glob.glob(pattern)):
-            exes = [p for p in (Path(app) / "Contents" / "MacOS").glob("*") if p.is_file()]
-            if exes:
-                return exes[0]
+            exe = app_executable(Path(app))
+            if exe:
+                return exe
     for name in ("sm64coopdx", "sm64coopdx.exe"):
         found = shutil.which(name)
         if found:
             return Path(found)
+    return None
+
+
+def app_executable(app: Path) -> Path | None:
+    """The main program of a macOS .app (named in Info.plist), not one of its libraries."""
+    macos = app / "Contents" / "MacOS"
+    try:
+        with open(app / "Contents" / "Info.plist", "rb") as f:
+            name = plistlib.load(f).get("CFBundleExecutable")
+        if name and (macos / name).is_file():
+            return macos / name
+    except (OSError, plistlib.InvalidFileException, ValueError):
+        pass
+    for candidate in sorted(macos.glob("*")):
+        if (candidate.is_file() and os.access(candidate, os.X_OK)
+                and candidate.suffix not in (".dylib", ".so") and ".dylib" not in candidate.name):
+            return candidate
     return None
 
 
