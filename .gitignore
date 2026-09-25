@@ -1,0 +1,21 @@
+# Spieldateien (ROMs) sind urheberrechtlich geschützt – NIEMALS hochladen
+*.z64
+*.n64
+*.v64
+*.rom
+baserom*
+
+# API-Schlüssel und Zugangsdaten
+.env
+.env.*
+*.key
+secrets*
+
+# Emulator-/Build-Ausgaben und Spielstände
+build/
+*.sav
+*.eep
+*.srm
+__pycache__/
+.venv/
+.DS_Store
