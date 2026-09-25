@@ -121,7 +121,7 @@ local function write_state(m)
         '"x":%s,"y":%s,"z":%s,"yaw":%d,"fvel":%s,"vy":%s,' ..
         '"action":%d,"air":%s,"water":%s,"health":%d,"coins":%d,"stars":%d,' ..
         '"floor_dy":%s,"objs":%s,"probes":%s}',
-        frame, lastCmdId, tostring(enabled), np.currLevelNum, np.currAreaNum,
+        frame, lastCmdId, tostring(enabled), np.currLevelNum, np.currAreaIndex,
         num(m.pos.x), num(m.pos.y), num(m.pos.z), m.faceAngle.y, num(m.forwardVel), num(m.vel.y),
         m.action, tostring(air), tostring(water), m.health >> 8, m.numCoins, m.numStars,
         num(m.floorHeight - m.pos.y), collect_objects(m), collect_probes(m))

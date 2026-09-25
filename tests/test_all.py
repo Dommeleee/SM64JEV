@@ -21,7 +21,7 @@ from jev_player.jev_client import BudgetExceeded, JevClient
 from jev_player.sim import SimWorld
 
 REPO = Path(__file__).resolve().parent.parent
-LUA = shutil.which("lua5.4") or shutil.which("lua")
+LUA = shutil.which("lua5.3") or shutil.which("lua5.4") or shutil.which("lua")  # the game uses Lua 5.3
 
 
 def base_state(**overrides):

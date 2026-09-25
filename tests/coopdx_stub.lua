@@ -97,7 +97,18 @@ gMarioStates = { [0] = {
     controller = controller,
     area = { camera = { yaw = 0 } },  -- deliberately wrong: the mod must self-calibrate
 } }
-gNetworkPlayers = { [0] = { currLevelNum = 9, currAreaNum = 1 } }
+gNetworkPlayers = { [0] = { currLevelNum = 9, currAreaIndex = 1 } }
+
+-- like the real game: reading a field that does not exist is an error
+local function strict(t, name)
+    for _, v in pairs(t) do
+        if type(v) == "table" and getmetatable(v) == nil and v ~= controller then strict(v, name) end
+    end
+    return setmetatable(t, { __index = function(_, k) error("invalid key '" .. tostring(k) .. "' on " .. name, 2) end })
+end
+strict(gMarioStates[0], "MarioState")
+strict(controller, "Controller")
+strict(gNetworkPlayers[0], "NetworkPlayer")
 
 dofile(main_path)
 
