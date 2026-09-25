@@ -183,7 +183,9 @@ class LuaModTest(unittest.TestCase):
         return out, json.loads(state_file.read_text()) if state_file.exists() else None
 
     def test_state_is_valid_and_usable(self):
+        from jev_player.__main__ import MOD_VERSION
         out, state = self.run_mod(None, 12)
+        self.assertEqual(state["v"], MOD_VERSION)
         self.assertIn("mag=0.0", out)  # no command: player keeps control
         self.assertEqual(state["objs"][0], {"k": "coin", "x": 500, "y": 60, "z": 0})
         east = [p for p in state["probes"] if p["yaw"] == 0x4000][0]

@@ -9,6 +9,7 @@
 -- Frame-exact input (stick, buttons) is produced here, inside the game.
 -- Python only picks the next short action, so network delays never matter.
 
+local MOD_VERSION = 3       -- must match MOD_VERSION in jev_player/__main__.py
 local STATE_EVERY = 6        -- frames between state writes (30 fps -> 5x per second)
 local CMD_EVERY = 3          -- frames between command reloads
 local CMD_MODFS = "jev-cmd"
@@ -117,11 +118,11 @@ local function write_state(m)
     local air = (m.action & ACT_FLAG_AIR) ~= 0
     local water = (m.action & ACT_FLAG_SWIMMING) ~= 0
     local json = string.format(
-        '{"t":%d,"ack":%d,"enabled":%s,"level":%d,"area":%d,' ..
+        '{"v":%d,"t":%d,"ack":%d,"enabled":%s,"level":%d,"area":%d,' ..
         '"x":%s,"y":%s,"z":%s,"yaw":%d,"fvel":%s,"vy":%s,' ..
         '"action":%d,"air":%s,"water":%s,"health":%d,"coins":%d,"stars":%d,' ..
         '"floor_dy":%s,"objs":%s,"probes":%s}',
-        frame, lastCmdId, tostring(enabled), np.currLevelNum, np.currAreaIndex,
+        MOD_VERSION, frame, lastCmdId, tostring(enabled), np.currLevelNum, np.currAreaIndex,
         num(m.pos.x), num(m.pos.y), num(m.pos.z), m.faceAngle.y, num(m.forwardVel), num(m.vel.y),
         m.action, tostring(air), tostring(water), m.health >> 8, m.numCoins, m.numStars,
         num(m.floorHeight - m.pos.y), collect_objects(m), collect_probes(m))

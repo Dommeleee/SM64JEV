@@ -26,28 +26,27 @@ Die Datei `.gitignore` schützt zusätzlich davor, dass so etwas versehentlich h
 
 ## Einrichtung auf dem Mac (einmalig)
 
-1. **SM64CoopDX herunterladen**: <https://github.com/coop-deluxe/sm64coopdx/releases>, dort die
-   macOS-Datei der neuesten Version (mindestens v1.4). Starte die App einmal. Sie fragt nach der
-   Spieldatei: `Super Mario 64 (USA).z64` auswählen. Danach die App wieder schließen.
-2. **Diesen Ordner herunterladen**: Auf GitHub auf den grünen Knopf **Code**, dann auf
-   **Download ZIP** klicken und die ZIP-Datei entpacken.
-3. **`1-Einrichten.command` doppelklicken.** Das installiert den Mod und fragt einmal nach dem
-   Jev-API-Schlüssel. Beim Einfügen ist nichts zu sehen, das ist Absicht.
-   - Meldet macOS *„nicht verifizierter Entwickler“*: Rechtsklick auf die Datei, dann **Öffnen**.
-   - Fehlt `python3`: macOS bietet dann an, die „Befehlszeilen-Entwicklertools“ zu installieren.
-     Bestätige das und doppelklicke die Datei danach noch einmal.
+1. **SM64CoopDX installieren**: <https://github.com/coop-deluxe/sm64coopdx/releases>, dort die
+   macOS-Datei der neuesten Version herunterladen und die App in **Programme** ziehen. Die App
+   einmal öffnen, die Spieldatei `Super Mario 64 (USA).z64` auswählen und die App wieder schließen.
+2. **Terminal öffnen** (⌘ + Leertaste, „Terminal“ tippen, Enter), diese Zeile einfügen und Enter
+   drücken:
+   ```
+   curl -fsSL https://raw.githubusercontent.com/Dommeleee/SM64JEV/claude/nifty-hypatia-9085kf/install.sh | bash
+   ```
+   Danach liegt auf dem Schreibtisch **„Jev Mario starten“**.
 
 ## Spielen
 
-1. SM64CoopDX starten, auf **Host** klicken, unter **Mods** den Eintrag **Jev Mario** anhaken
-   und das Spiel starten.
-2. Eine der beiden Dateien doppelklicken:
-   - `2-Mario-mit-Regel.command`: die einfache Regel, kostenlos
-   - `3-Mario-mit-Jev.command`: Jev entscheidet, höchstens 0,10 $
-3. Oben links im Spiel steht, was Mario gerade tut. Im Terminal siehst du die Entscheidungen und
-   die bisherigen Kosten.
-4. **Beenden**: im Terminal `Ctrl+C` drücken. Dann steuerst du wieder selbst. Im Spiel-Chat kannst
-   du die Steuerung auch mit `/jev off` und `/jev on` aus- und einschalten.
+**„Jev Mario starten“ doppelklicken.** Alles andere passiert automatisch:
+
+- Die neueste Version wird geladen.
+- Das Spiel startet mit dem Mod als Host, ganz ohne Menüs.
+- Mario spielt los.
+
+Beim ersten Start fragt das Programm nach dem Jev-API-Schlüssel. Drückst du nur Enter, spielt
+die kostenlose Regel statt Jev. Beenden: Spiel schließen oder im Terminal `Ctrl+C` drücken. Im
+Spiel-Chat schaltest du die Steuerung mit `/jev off` und `/jev on` aus und ein.
 
 ## Ohne Spiel testen
 
