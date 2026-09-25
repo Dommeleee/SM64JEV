@@ -78,6 +78,7 @@ def cmd_play(args):
                     print("  - Läuft SM64CoopDX, mit 'Jev Mario' unter Mods angehakt?")
                     print("  - Bist du im Spiel (nicht im Menü) und steht oben links 'Jev: ...'?")
                     print("  - Falls dort 'Jev: Fehler beim Speichern' steht: Spiel neu starten.")
+                    print(f"  (Technische Info: {bridge.last_error})")
                 time.sleep(0.03)
                 continue
             if start_coins is None:

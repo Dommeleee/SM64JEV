@@ -20,6 +20,7 @@ local enabled = true
 local frame = 0
 local myFs = nil
 local saveFailed = false
+local lastError = nil
 
 -- current command
 local cmd = { id = -1, act = "stop", tx = 0, tz = 0, frames = 0 }
@@ -212,7 +213,10 @@ local function before_mario_update(m)
     if m.playerIndex ~= 0 then return end
     frame = frame + 1
 
-    if frame % CMD_EVERY == 0 then read_cmd() end
+    if frame % CMD_EVERY == 0 then
+        local ok, err = pcall(read_cmd)
+        if not ok then lastError = "cmd: " .. tostring(err) end
+    end
 
     -- only override the controller while a command is running; if Python
     -- stops sending, the command runs out and the player has control again
@@ -230,7 +234,10 @@ local function mario_update(m)
         camOffset = m.intendedYaw - lastStickYaw
     end
 
-    if frame % STATE_EVERY == 0 then write_state(m) end
+    if frame % STATE_EVERY == 0 then
+        local ok, err = pcall(write_state, m)
+        if not ok then lastError = "state: " .. tostring(err) end
+    end
 end
 
 local function on_hud_render()
@@ -241,6 +248,9 @@ local function on_hud_render()
     if lastCmdId < 0 or cmdFrame >= cmd.frames then label = "Jev: wartet auf Python" end
     if saveFailed then label = "Jev: Fehler beim Speichern" end
     djui_hud_print_text(label, 20, 20, 1, 1)
+    if lastError ~= nil then
+        djui_hud_print_text("Fehler: " .. lastError, 20, 50, 0.6, 0.6)
+    end
 end
 
 local function on_jev_command(msg)

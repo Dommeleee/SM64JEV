@@ -39,6 +39,7 @@ class GameBridge:
         self.state_path = self.sav_dir / f"{MOD_NAME}.modfs"
         self.cmd_path = self.sav_dir / f"{CMD_MODFS}.modfs"
         self._last_t = None
+        self.last_error = None
         # SM64CoopDX does not create sav/ on its own; without it the mod cannot write its state
         self.sav_dir.mkdir(parents=True, exist_ok=True)
 
@@ -48,7 +49,11 @@ class GameBridge:
             data = self.state_path.read_bytes()
             with zipfile.ZipFile(io.BytesIO(data)) as zf:
                 state = json.loads(zf.read("state.json"))
-        except (OSError, KeyError, zipfile.BadZipFile, json.JSONDecodeError):
+        except FileNotFoundError:
+            self.last_error = "Datei fehlt noch"
+            return None
+        except (OSError, KeyError, zipfile.BadZipFile, json.JSONDecodeError) as error:
+            self.last_error = f"{type(error).__name__}: {error}"
             return None
         if state.get("t") == self._last_t:
             return None
